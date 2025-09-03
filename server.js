@@ -1,41 +1,27 @@
-const express = require('express');
-const crypto = require('crypto');
-
+const express = require("express");
 const app = express();
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json({
-  verify: (req, res, buf) => { req.rawBody = buf; }
-}));
-
-const RAZORPAY_WEBHOOK_SECRET = process.env.RAZORPAY_WEBHOOK_SECRET || 'test_secret';
-
-// Health check
-app.get('/', (req, res) => res.send('Server chal raha hai 🚀'));
-
-// Razorpay webhook route
-app.post('/razorpay/webhook', (req, res) => {
-  const signature = req.headers['x-razorpay-signature'];
-  const expected = crypto.createHmac('sha256', RAZORPAY_WEBHOOK_SECRET)
-    .update(req.rawBody)
-    .digest('hex');
-
-  if (signature !== expected) {
-    return res.status(400).send('❌ Invalid signature');
-  }
-
-  const event = req.body.event;
-  console.log("✅ Event aaya:", event);
-
-  if (event === 'subscription.activated') {
-    console.log("Subscription shuru ho gayi");
-  } else if (event === 'invoice.paid') {
-    console.log("Invoice paid, subscription continue hai");
-  } else if (event === 'subscription.cancelled') {
-    console.log("Subscription cancel ho gayi");
-  }
-
-  res.status(200).send('OK');
+// Home
+app.get("/", (req, res) => {
+  res.send("<h1>Welcome to my Razorpay demo server 🚀</h1>");
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server ${PORT} port pe chal raha hai`));
+// Contact Us page
+app.get("/contact", (req, res) => {
+  res.send("<h1>Contact Us</h1><p>Email: support@myshop.com</p>");
+});
+
+// Shipping Policy page
+app.get("/shipping", (req, res) => {
+  res.send("<h1>Shipping Policy</h1><p>Orders are delivered in 5–7 working days.</p>");
+});
+
+// Terms & Conditions page
+app.get("/terms", (req, res) => {
+  res.send("<h1>Terms and Conditions</h1><p>By using this website you agree to our policies.</p>");
+});
+
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
