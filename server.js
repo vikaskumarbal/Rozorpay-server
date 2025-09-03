@@ -25,3 +25,11 @@ app.get("/terms", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+app.get("/refund", (req, res) => {
+  res.send(`
+    <h1>Cancellation and Refund Policy</h1>
+    <p>Orders can be cancelled within 24 hours of purchase.</p>
+    <p>Refunds will be processed within 5-7 business days after cancellation.</p>
+    <p>For any help, contact us at support@myshop.com.</p>
+  `);
+});
